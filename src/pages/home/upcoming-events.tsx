@@ -1,10 +1,34 @@
 import { CalendarOutlined } from '@ant-design/icons'
-import { Card, List } from 'antd'
+import { Badge, Card, List } from 'antd'
 import { Text } from '@/components/text'
-import { useState } from 'react'
+import { UpcomingEventsSkeleton } from '@/components'
+import { getDate } from '@/utilities/helpers'
+import { DASHBORAD_CALENDAR_UPCOMING_EVENTS_QUERY } from '@/graphql/queries'
+import { useList } from '@refinedev/core'
+import dayjs from 'dayjs'
 
 const UpcomingEvents = () => {
-  const [isLoading, setIsLoaing] = useState(true)
+  const {data, isLoading} = useList({
+    resource: 'events',
+    pagination: {pageSize: 5},
+    sorters: [
+      {
+        field: 'startDate',
+        order: 'asc'
+      }
+    ],
+    filters: [
+      {
+        field: 'startDate',
+        operator: 'gte',
+        value: dayjs().format('YYYY-MM-DD')
+      }
+    ],
+    meta:{
+      gqlQuery: DASHBORAD_CALENDAR_UPCOMING_EVENTS_QUERY
+    }
+  })
+
   return (
   <Card
   style={{height: '100%'}}
@@ -29,13 +53,42 @@ itemLayout='horizontal'
 dataSource={Array.from({ length: 5}).map((_, index) =>({
   id: index
 }))}
+renderItem={() => <UpcomingEventsSkeleton />}
 >
 
 </List>) :
-<List>
+<List
+itemLayout='horizontal'
+dataSource={data?.data ||  []}
+renderItem={(item) =>{
+  const renderDate = getDate(item.startDate, item.endDate)
+  return (
+    <List.Item>
+      <List.Item.Meta
+      avatar={<Badge color={item.color} />}
+      title={<Text size="xs">{renderDate}</Text>}
+      description={<Text ellipsis={{tooltip: true}} strong> {item.title} </Text>}
+      />
 
-</List>
+      
+    </List.Item>
+  )
+}}
+
+/>
 }
+{!isLoading && data?.data.length ===0 && (
+  <span
+  style={{
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '220px'
+  }}
+  >
+    No Upcoming events
+  </span>
+)}
   </Card>
   )
 }
