@@ -15,7 +15,7 @@ import routerBindings, {
 import { App as AntdApp } from "antd";
 import { createClient } from "graphql-ws";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
-import { Home, ForgotPassword, Register, Login } from "./pages";
+import { Home, ForgotPassword, Register, Login, CompanyList } from "./pages";
 import Layout from "./components/layout";
 import { resources } from "./components/config/resources";
 
@@ -59,6 +59,7 @@ function App() {
               </Authenticated>
             }>
               <Route index element={<Home />}></Route>
+              <Route path='/companies' element={<CompanyList />}></Route>
                   </Route>
                 </Routes>
                 <RefineKbar />
