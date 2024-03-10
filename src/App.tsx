@@ -1,4 +1,4 @@
-import { Authenticated, GitHubBanner, Refine, WelcomePage } from "@refinedev/core";
+import { Authenticated, Refine } from "@refinedev/core";
 import { DevtoolsPanel, DevtoolsProvider } from "@refinedev/devtools";
 import { RefineKbar, RefineKbarProvider } from "@refinedev/kbar";
 
@@ -13,7 +13,6 @@ import routerBindings, {
   UnsavedChangesNotifier,
 } from "@refinedev/react-router-v6";
 import { App as AntdApp } from "antd";
-import { createClient } from "graphql-ws";
 import { BrowserRouter, Outlet, Route, Routes } from "react-router-dom";
 import { Home, ForgotPassword, Register, Login, CompanyList } from "./pages";
 import Layout from "./components/layout";
@@ -28,7 +27,6 @@ import EditTask from "./pages/tasks/edit";
 function App() {
   return (
     <BrowserRouter>
-      <GitHubBanner />
       <RefineKbarProvider>
           <AntdApp>
             <DevtoolsProvider>
@@ -43,8 +41,8 @@ function App() {
                   syncWithLocation: true,
                   warnWhenUnsavedChanges: true,
                   useNewQueryKeys: true,
-                  projectId: "936cHh-2wBRfI-anu8JR",
-                  liveMode: "auto",
+                  // projectId: "936cHh-2wBRfI-anu8JR",
+                  // liveMode: "auto",
                 }}
               >
                 <Routes>
