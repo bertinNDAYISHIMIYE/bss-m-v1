@@ -10,7 +10,7 @@ import { TaskStage } from '@/graphql/schema.types'
 import { TaskStagesQuery, TasksQuery } from '@/graphql/types'
 import { Column } from '@antv/g2plot'
 import { DragEndEvent } from '@dnd-kit/core'
-import { useList, useUpdate } from '@refinedev/core'
+import { useList, useNavigation, useUpdate } from '@refinedev/core'
 import { GetFieldsFromList } from '@refinedev/nestjs-query'
 import React from 'react'
 
@@ -18,6 +18,8 @@ type Task = GetFieldsFromList<TasksQuery>;
 type TaskStage = GetFieldsFromList<TaskStagesQuery> & { tasks: Task[] };
 
 const List = ({children}: React.PropsWithChildren) => {
+    const { replace } = useNavigation();
+
     const { data: stages, isLoading: isLoadingStages} = useList<TaskStage>({
         resource: 'taskStages',
         filters: [
@@ -75,7 +77,14 @@ const List = ({children}: React.PropsWithChildren) => {
         }
 
     }, [stages, tasks])
-    const handleAddCard=(args: {stageId: string}) =>{}
+    const handleAddCard = (args: { stageId: string }) => {
+        const path =
+          args.stageId === "unassigned"
+            ? "/tasks/new"
+            : `/tasks/new?stageId=${args.stageId}`;
+    
+        replace(path);
+      };
     const isLoading = isLoadingStages || isLoadingTasks
     if (isLoading) return <PageSkeleton />
 
