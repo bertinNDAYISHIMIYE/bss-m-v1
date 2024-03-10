@@ -7,11 +7,15 @@ import KanbanItem from '@/components/tasks/kanban/item'
 import { UPDATE_TASK_STAGE_MUTATION } from '@/graphql/mutations'
 import { TASKS_QUERY, TASK_STAGES_QUERY } from '@/graphql/queries'
 import { TaskStage } from '@/graphql/schema.types'
-import { TasksQuery } from '@/graphql/types'
+import { TaskStagesQuery, TasksQuery } from '@/graphql/types'
+import { Column } from '@antv/g2plot'
 import { DragEndEvent } from '@dnd-kit/core'
 import { useList, useUpdate } from '@refinedev/core'
 import { GetFieldsFromList } from '@refinedev/nestjs-query'
 import React from 'react'
+
+type Task = GetFieldsFromList<TasksQuery>;
+type TaskStage = GetFieldsFromList<TaskStagesQuery> & { tasks: Task[] };
 
 const List = ({children}: React.PropsWithChildren) => {
     const { data: stages, isLoading: isLoadingStages} = useList<TaskStage>({
@@ -62,10 +66,9 @@ const List = ({children}: React.PropsWithChildren) => {
         }
         const unnasignedStages = tasks.data.filter((task) => task.stageId === null)
         const grouped: TaskStage[] = stages.data.map((stage) => ({
-            ...stages,
+            ...stage,
             tasks: tasks.data.filter((task) => task.stageId?.toString() === stage.id)
         }))
-        console.log("++++++", grouped[0])
         return {
             unnasignedStages,
             columns: grouped
@@ -123,8 +126,7 @@ const List = ({children}: React.PropsWithChildren) => {
                      />
                 )}
             </KanbanColumn>
-            {taskStages.columns?.map((column) =>{
-                console.log(column.title)
+            {taskStages.columns?.map((column, index) =>{
                return <KanbanColumn
                 key={column.id}
                 id={column.id}
