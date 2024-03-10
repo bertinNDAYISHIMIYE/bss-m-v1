@@ -2,16 +2,18 @@ import CustomAvatar from '@/components/layout/custom-avatar';
 import { COMPANIES_LIST_QUERY } from '@/graphql/queries';
 import { ReconciliationFilled, SearchOutlined } from '@ant-design/icons';
 import { CreateButton, DeleteButton, EditButton, FilterDropdown, List, useTable } from '@refinedev/antd'
-import { getDefaultFilter, useGo } from '@refinedev/core';
+import { HttpError, getDefaultFilter, useGo } from '@refinedev/core';
 import { Input, Space, Table } from 'antd';
 import { Text } from '@/components/text'
 import { Company } from '@/graphql/schema.types';
 import { currencyNumber } from '@/utilities';
+import { GetFieldsFromList } from '@refinedev/nestjs-query';
+import { CompaniesListQuery } from '@/graphql/types';
 
 
 export const CompanyList = ({children}: React.PropsWithChildren) => {
   const go = useGo();
-  const { tableProps, filters } = useTable({
+  const { tableProps, filters } = useTable<GetFieldsFromList<CompaniesListQuery>, HttpError, GetFieldsFromList<CompaniesListQuery>>({
     resource: 'companies',
     onSearch: (values) => {
       return [

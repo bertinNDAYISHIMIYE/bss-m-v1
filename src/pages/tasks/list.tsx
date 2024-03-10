@@ -1,14 +1,12 @@
 import { KanbanColumnSkeleton, ProjectCardSkeleton } from '@/components'
 import { KanbanAddCardButton } from '@/components/tasks/kanban/add-card-button'
 import { KanbanBoard, KanbanBoardContainer } from '@/components/tasks/kanban/board'
-import ProjectCard, { ProjectCardMemo } from '@/components/tasks/kanban/card'
+import { ProjectCardMemo } from '@/components/tasks/kanban/card'
 import KanbanColumn from '@/components/tasks/kanban/columns'
 import KanbanItem from '@/components/tasks/kanban/item'
 import { UPDATE_TASK_STAGE_MUTATION } from '@/graphql/mutations'
 import { TASKS_QUERY, TASK_STAGES_QUERY } from '@/graphql/queries'
-import { TaskStage } from '@/graphql/schema.types'
 import { TaskStagesQuery, TasksQuery } from '@/graphql/types'
-import { Column } from '@antv/g2plot'
 import { DragEndEvent } from '@dnd-kit/core'
 import { useList, useNavigation, useUpdate } from '@refinedev/core'
 import { GetFieldsFromList } from '@refinedev/nestjs-query'
@@ -135,7 +133,7 @@ const List = ({children}: React.PropsWithChildren) => {
                      />
                 )}
             </KanbanColumn>
-            {taskStages.columns?.map((column, index) =>{
+            {taskStages.columns?.map((column) =>{
                return <KanbanColumn
                 key={column.id}
                 id={column.id}
